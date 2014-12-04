@@ -27,6 +27,8 @@ cd "${KUBE_ROOT}"
 # Stop right away if the build fails
 set -e
 
+KUBERNETES_PROVIDER=${KUBERNETES_PROVIDER:-local}
+source "${KUBE_ROOT}/cluster/${KUBERNETES_PROVIDER}/util.sh"
 source "${KUBE_ROOT}/hack/lib/init.sh"
 "${KUBE_ROOT}/hack/build-go.sh"
 
