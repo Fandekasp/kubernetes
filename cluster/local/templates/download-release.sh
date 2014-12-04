@@ -14,11 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function detect-master () {
-  echo "Running locally"
+# Download and install release
 
-  # Report logging choice (if any).
-  if [[ "${ENABLE_NODE_LOGGING-}" == "true" ]]; then
-    echo "+++ Logging using Fluentd to ${LOGGING_DESTINATION:-unknown}"
-  fi
-}
+# This script assumes that the environment variable MASTER_RELEASE_TAR contains
+# the release tar to download and unpack.  It is meant to be pushed to the
+# master and run.
+
+echo "Downloading binary release tar ($SERVER_BINARY_TAR_URL)"
+wget "$SERVER_BINARY_TAR_URL" .
+
+echo "Downloading binary release tar ($SALT_TAR_URL)"
+wget "$SALT_TAR_URL" .
+
+echo "Unpacking Salt tree"
+rm -rf kubernetes
+tar xzf "${SALT_TAR_URL##*/}"
+
+echo "Running release install script"
+sudo kubernetes/saltbase/install.sh "${SERVER_BINARY_TAR_URL##*/}"
